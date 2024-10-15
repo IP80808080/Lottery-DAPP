@@ -8,7 +8,10 @@ Follow these steps to install and start the project:
 
 1. Clone the project repository
 2. Open a terminal in the project directory and install packages
-3. Create a `.env` file in the root directory with the following variables:
+3. ```
+   npm i
+   ```
+4. Create a `.env` file in the root directory with the following variables:
    ```
    PRIVATE_KEY=
    GANACHE_URL=http://127.0.0.1:7545
