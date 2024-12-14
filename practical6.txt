@@ -1,0 +1,20 @@
+pragma solidity ^0.8.0;
+
+contract EtherTransfer {
+    address public owner;
+
+    constructor() {
+        owner = msg.sender;
+    }
+
+    function sendEther(address payable recipient) public payable {
+        require(msg.value > 0, "Send some Ether");
+        recipient.transfer(msg.value);
+    }
+
+    function checkBalance() public view returns (uint) {
+        return address(this).balance;
+    }
+
+    receive() external payable {}
+}
