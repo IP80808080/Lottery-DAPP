@@ -1,0 +1,20 @@
+const crypto = require('crypto');
+
+class Block {
+    constructor(index, previousHash, data) {
+        this.index = index;
+        this.previousHash = previousHash;
+        this.data = data;
+        this.timestamp = Date.now();
+        this.hash = crypto.createHash('sha256').update(`${index}${previousHash}${data}${this.timestamp}`).digest('hex');
+    }
+}
+
+const blockchain = [new Block(0, "0", "Genesis Block")];
+
+for (let i = 1; i < 5; i++) {
+    const prevBlock = blockchain[blockchain.length - 1];
+    blockchain.push(new Block(i, prevBlock.hash, `Block ${i} data`));
+}
+
+blockchain.forEach(b => console.log(b));
