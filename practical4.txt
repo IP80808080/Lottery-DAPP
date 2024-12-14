@@ -1,0 +1,44 @@
+const crypto = require('crypto');
+
+class Block {
+    constructor(index, previousHash, data) {
+        this.index = index;
+        this.previousHash = previousHash;
+        this.data = data;
+        this.timestamp = Date.now();
+        this.hash = crypto.createHash('sha256').update(`${index}${previousHash}${data}${this.timestamp}`).digest('hex');
+    }
+}
+
+class Blockchain {
+    constructor() {
+        this.chain = [new Block(0, "0", "Genesis Block")];
+    }
+
+    addBlock(data) {
+        const prevBlock = this.chain.at(-1);
+        this.chain.push(new Block(this.chain.length, prevBlock.hash, data));
+    }
+
+    isValidChain(chain) {
+        return chain.every((block, i) => i === 0 || (block.previousHash === chain[i - 1].hash && block.hash === crypto.createHash('sha256').update(`${block.index}${block.previousHash}${block.data}${block.timestamp}`).digest('hex')));
+    }
+
+    replaceChain(newChain) {
+        if (newChain.length > this.chain.length && this.isValidChain(newChain)) this.chain = newChain;
+    }
+}
+
+const blockchain = new Blockchain();
+blockchain.addBlock("Block 1 data");
+blockchain.addBlock("Block 2 data");
+
+const newChain = [
+    new Block(0, "0", "Genesis Block"),
+    new Block(1, blockchain.chain[0].hash, "Block 1 data"),
+    new Block(2, blockchain.chain[1].hash, "Block 2 data"),
+    new Block(3, blockchain.chain[2].hash, "Block 3 data")
+];
+
+blockchain.replaceChain(newChain);
+console.log(blockchain.chain);
